@@ -14,6 +14,7 @@ my $tagFile;
 
 # Global Variables - initialized in parseCorecommandLine
 my %cmdLine;
+my $maxTagsInLine = 20;
 
 ########################################################################
 # This script tags photos with the info contained in the csv file
@@ -162,11 +163,11 @@ sub tagFile{
 
     print("Tagging '$destPhoto'\n");
 
-    $tag = $tagLine{"tag1"};
+    $tag = $tagLine{"tag0"};
     system("$exiv2Exe -M\"set $tagKeyword $tag\" \"$destPhoto\" ");
 
     # Iterate through the tags
-    for($i = 2 ; $i < 11 ; $i++) {
+    for($i = 1 ; $i < $maxTagsInLine ; $i++) {
 	$key = sprintf("tag%d", $i);
     	if($tagLine{"$key"} ne "") {
     	    $tag = $tagLine{$key};
@@ -175,18 +176,12 @@ sub tagFile{
     }
 
     #print the index to the mappingFile so that I have a record of what was tagged
-    $tag = sprintf("%s -> %s : %s : %s : %s : %s : %s : %s : %s : %s : %s", $destPhoto,
-	$tagLine{"tag1"},
-	$tagLine{"tag2"},
-	$tagLine{"tag3"},
-	$tagLine{"tag4"},
-	$tagLine{"tag5"},
-	$tagLine{"tag6"},
-	$tagLine{"tag7"},
-	$tagLine{"tag8"},
-	$tagLine{"tag9"},
-	$tagLine{"tag10"});
-     print $mapFile "$tag\n"; 
+    $tag = $destPhoto . "-> ";
+    for($i = 0 ; $i < $maxTagsInLine ; $i++) {
+	$tag = $tag . $tagLine{"tag$i"} . " : ";
+    }
+
+    print $mapFile "$tag\n"; 
 }
 
 
@@ -228,7 +223,7 @@ sub readTagFile {
 
     # ignore the first 2lines
     $line = <IN>;
-    $line = <IN>;
+    #$line = <IN>;
     while ($line = <IN>) {
 	@tmp = split(/, */,$line);
 
@@ -236,22 +231,32 @@ sub readTagFile {
 	#if($tmp[1] ne "") {
 	if(1==1) {
 	    # first, go through each tag and strip off any leading or ending quotes
-	    for($i = 1 ; $i < 11 ; $i++) {
+	    for($i = 1 ; $i <= $maxTagsInLine ; $i++) {
 		$tmp[$i] =~ s/^"+//g;
 		$tmp[$i] =~ s/"+$//g;
 	    }
 
-	    @tagLine = ("photo", $tmp[0], 
-			"tag1", $tmp[1], 
-			"tag2", $tmp[2], 
-			"tag3", $tmp[3],  
-			"tag4", $tmp[4], 
-			"tag5", $tmp[5], 
-			"tag6", $tmp[6], 
-			"tag7", $tmp[7], 
-			"tag8", $tmp[8],
-			"tag9", $tmp[9],
-			"tag10", $tmp[10]
+	    @tagLine = ("photo", $tmp[0],
+			"tag0", $tmp[1], 
+			"tag1", $tmp[2], 
+			"tag2", $tmp[3],  
+			"tag3", $tmp[4], 
+			"tag4", $tmp[5], 
+			"tag5", $tmp[6], 
+			"tag6", $tmp[7], 
+			"tag7", $tmp[8],
+			"tag8", $tmp[9],
+			"tag9", $tmp[10],
+			"tag10", $tmp[11],
+			"tag11", $tmp[12],
+			"tag12", $tmp[13],
+			"tag13", $tmp[14],
+			"tag14", $tmp[15],
+			"tag15", $tmp[16],
+			"tag16", $tmp[17],
+			"tag17", $tmp[18],
+			"tag18", $tmp[19],
+			"tag19", $tmp[20]
 			 );
 
 
@@ -276,7 +281,27 @@ sub readTagFile {
 	    $tags[$count][17] = @tagLine[17];
 	    $tags[$count][18] = @tagLine[18];
 	    $tags[$count][19] = @tagLine[19];
-	    $tags[$count++][20] = @tagLine[20];
+	    $tags[$count][20] = @tagLine[20];
+	    $tags[$count][21] = @tagLine[21];
+	    $tags[$count][22] = @tagLine[22];
+	    $tags[$count][23] = @tagLine[23];
+	    $tags[$count][24] = @tagLine[24];
+	    $tags[$count][25] = @tagLine[25];
+	    $tags[$count][26] = @tagLine[26];
+	    $tags[$count][27] = @tagLine[27];
+	    $tags[$count][28] = @tagLine[28];
+	    $tags[$count][29] = @tagLine[29];
+	    $tags[$count][30] = @tagLine[30];
+	    $tags[$count][31] = @tagLine[31];
+	    $tags[$count][32] = @tagLine[32];
+	    $tags[$count][33] = @tagLine[33];
+	    $tags[$count][34] = @tagLine[34];
+	    $tags[$count][35] = @tagLine[35];
+	    $tags[$count][36] = @tagLine[36];
+	    $tags[$count][37] = @tagLine[37];
+	    $tags[$count][38] = @tagLine[38];
+	    $tags[$count][39] = @tagLine[39];
+	    $tags[$count++][40] = @tagLine[40];
 	}
     }
     close( IN );
@@ -293,19 +318,14 @@ sub readTagFile {
 ################################################################
 sub printtagInfo {
         my (%tagLine) = @_;
+        my $i;
 
 	#print the contents of the tagInfo
-	print("$tagLine{\"photo\"}"); 
-	print(" ; $tagLine{\"tag1\"}"); 
-	print(" ; $tagLine{\"tag2\"}"); 
-	print(" ; $tagLine{\"tag3\"}"); 
-	print(" ; $tagLine{\"tag4\"}"); 
-	print(" ; $tagLine{\"tag5\"}"); 
-	print(" ; $tagLine{\"tag6\"}"); 
-	print(" ; $tagLine{\"tag7\"}"); 
-	print(" ; $tagLine{\"tag8\"}"); 
-	print(" ; $tagLine{\"tag9\"}"); 
-	print(" ; $tagLine{\"tag10\"}\n"); 
+	print("$tagLine{\"photo\"}");
+	for($i = 0 ; $i < $maxTagsInLine ; $i++) {
+	    print(" ; $tagLine{\"tag$i\"}");
+	}
+	print("\n"); 
 
 }
 
