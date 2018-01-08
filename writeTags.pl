@@ -223,7 +223,7 @@ sub readTagFile {
 
     # ignore the first 2lines
     $line = <IN>;
-    #$line = <IN>;
+    $line = <IN>;
     while ($line = <IN>) {
 	@tmp = split(/, */,$line);
 
